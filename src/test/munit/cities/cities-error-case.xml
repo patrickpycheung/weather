@@ -125,7 +125,7 @@ replace '\r' with ''
 		<munit:execution >
 			<munit:set-event doc:name="Set Event" doc:id="ba705a02-82bd-48c8-b3d1-375360696de9" >
 				<munit:attributes value="#[{ queryParams:
- { 'CountryName' :  'Australia', 'CityName': 'Melbourne'}}]" />
+ { 'CountryName' :  'Australia'}}]" />
 			</munit:set-event>
 			<flow-ref doc:name="Flow-ref to getCitiesFlow" doc:id="f1791441-44c3-456d-88a8-d6c0d2eb994e" name="getCitiesFlow"/>
 		</munit:execution>
