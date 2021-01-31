@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd http://www.mulesoft.org/schema/mule/munit-tools http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd ">
+    <munit:config name="weather-error-case.xml" />
+    <munit:test name="weather-countryName-boundary-exceeded" description="GET /weather - countryName exceeds the boundary">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="baa986ab-2ebf-474e-a369-d8b78e7ae789" >
+				<munit:attributes value="#[{ queryParams:
+ { 'CountryName' :  'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'CityName': 'Melbourne'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to getWeatherFlow" doc:id="159ace83-4bd2-4c60-aaf1-ac6517e27f2c" name="getWeatherFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="c41a4c45-fe74-45a5-8f1c-673bcb7032c0" expression="#[output application/java
+---
+write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(
+MunitTools::getResourceAsStream('sample_data/invalidCountryName_Boundary_Exceeded_Error_Response.json')
+replace '\r' with ''
+)]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="73b01504-9286-4cf2-8935-1aa2a80cb193" is="#[MunitTools::equalTo('400')]" expression="#[vars.httpStatus]"/>
+		</munit:validation>
+    </munit:test>
+    <munit:test name="weather-cityName-boundary-exceeded" description="GET /weather - countryName exceeds the boundary">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="a5de903e-21ae-4ee3-9269-605d33baf1f5" >
+				<munit:attributes value="#[{ queryParams:
+ { 'CountryName' :  'Australia', 'CityName': 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to getWeatherFlow" doc:id="1d26747a-c57e-459a-ae2f-434905cca426" name="getWeatherFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="0444557a-dd86-4e66-bf30-0893640467ac" expression="#[output application/java
+---
+write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(
+MunitTools::getResourceAsStream('sample_data/invalidCityName_Boundary_Exceeded_Error_Response.json')
+replace '\r' with ''
+)]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="e18b6aa6-aabd-4c11-9823-0b493de80f48" is="#[MunitTools::equalTo('400')]" expression="#[vars.httpStatus]"/>
+		</munit:validation>
+    </munit:test>
+    <munit:test name="weather-countryName-non-alphanumeric" description="GET /weather - countryName contains non-alphanumeric character">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="957308fd-be4a-4213-b8ca-0850bf8d4c83" >
+				<munit:attributes value="#[{ queryParams:
+ { 'CountryName' :  '#', 'CityName': 'Melbourne'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to getWeatherFlow" doc:id="b47aa235-6b39-4e41-b1c8-5c11c1410d02" name="getWeatherFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="731907ed-3c64-412f-907c-8d5061b32155" expression="#[output application/java
+---
+write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(
+MunitTools::getResourceAsStream('sample_data/invalidCountryName_Non_Alphanumeric_Error_Response.json')
+replace '\r' with ''
+)]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="27f50f1f-406e-4b72-b88d-220ed0942b32" is="#[MunitTools::equalTo('400')]" expression="#[vars.httpStatus]"/>
+		</munit:validation>
+    </munit:test>
+    <munit:test name="weather-cityName-non-alphanumeric" description="GET /weather - cityName contains non-alphanumeric character">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="f79b02d0-aee4-4768-aa98-e1ccc325a1c5" >
+				<munit:attributes value="#[{ queryParams:
+ { 'CountryName' :  'Australia', 'CityName': '#'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to getWeatherFlow" doc:id="5855debc-207b-4ee9-b635-91848e61372c" name="getWeatherFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="be51da5f-8e9a-4b11-9f97-1f40e8c5d30f" expression="#[output application/java
+---
+write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(
+MunitTools::getResourceAsStream('sample_data/invalidCityName_Non_Alphanumeric_Error_Response.json')
+replace '\r' with ''
+)]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="2a26a5ad-e142-4447-9224-c0f726364582" is="#[MunitTools::equalTo('400')]" expression="#[vars.httpStatus]"/>
+		</munit:validation>
+    </munit:test>
+    <munit:test name="weather-countryName-number" description="GET /weather - countryName contains number">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="36068c42-7b36-420e-aec2-f1cc2b1eac60" >
+				<munit:attributes value="#[{ queryParams:
+ { 'CountryName' :  '1', 'CityName': 'Melbourne'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to getWeatherFlow" doc:id="65db3e43-9f95-491c-88d1-199ca7ac91c5" name="getWeatherFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="8afc5edd-01a0-4b0f-bada-ca1e00810d90" expression="#[output application/java
+---
+write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(
+MunitTools::getResourceAsStream('sample_data/invalidCountryName_Number_Error_Response.json')
+replace '\r' with ''
+)]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="e9baca38-326c-456f-9e38-1a79e0073ecc" is="#[MunitTools::equalTo('400')]" expression="#[vars.httpStatus]"/>
+		</munit:validation>
+    </munit:test>
+    <munit:test name="weather-cityName-number" description="GET /weather - cityName contains number">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="e209529c-c88e-4051-86c6-989d88c41e9f" >
+				<munit:attributes value="#[{ queryParams:
+ { 'CountryName' :  'Australia', 'CityName': '2'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to getWeatherFlow" doc:id="dfc6f3ee-5f1d-4cb8-a5cd-a6591e26b9eb" name="getWeatherFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="91cc4421-8261-4de9-837f-5f8278417e9e" expression="#[output application/java
+---
+write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(
+MunitTools::getResourceAsStream('sample_data/invalidCityName_Number_Error_Response.json')
+replace '\r' with ''
+)]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="c5c291cf-532b-4c6e-a280-90c52c7846e3" is="#[MunitTools::equalTo('400')]" expression="#[vars.httpStatus]"/>
+		</munit:validation>
+    </munit:test>
+    <munit:test name="weather-weatherWebService_connectivity" description="GET /weather - connectivity issue with the Weather Web Service">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="be4d14bc-dc34-473f-83a6-a228df82ea85" processor="wsc:consume">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Weather_Web_Service_Consumer_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="WSC:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="68219d99-616b-4ec7-9d4e-182cd0689907" >
+				<munit:attributes value="#[{ queryParams:
+ { 'CountryName' :  'Australia', 'CityName': 'Melbourne'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to getWeatherFlow" doc:id="62c8ca31-d823-467f-b342-f4ca9dec771d" name="getWeatherFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="87a5a475-3bb6-46e9-9026-ab70afe4e8dc" expression="#[output application/java
+---
+write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(
+MunitTools::getResourceAsStream('sample_data/weatherWebService_Connectivity_Error_Response.json')
+replace '\r' with ''
+)]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="8de34613-3ff3-43b1-9436-4f37b9cba232" is="#[MunitTools::equalTo('500')]" expression="#[vars.httpStatus]"/>
+		</munit:validation>
+    </munit:test>
+    <munit:test name="weather-weatherWebService_invalid_wsdl" description="GET /weather - wsdl issue with the Weather Web Service">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="620d29ec-7746-444a-9545-c667e44777d1" processor="wsc:consume">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Weather_Web_Service_Consumer_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="WSC:INVALID_WSDL" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="01c27ab6-65cb-4b6b-899b-8a760756e01e" >
+				<munit:attributes value="#[{ queryParams:
+ { 'CountryName' :  'Australia', 'CityName': 'Melbourne'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to getWeatherFlow" doc:id="a139ff0e-bd61-48ec-bae3-c83216fe72f2" name="getWeatherFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="d73770d9-2ee4-4729-b192-46665ae02ff6" expression="#[output application/java
+---
+write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(
+MunitTools::getResourceAsStream('sample_data/weatherWebService_Invalid_Wsdl_Error_Response.json')
+replace '\r' with ''
+)]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="ae874593-6a01-4834-b577-219100e74667" is="#[MunitTools::equalTo('500')]" expression="#[vars.httpStatus]"/>
+		</munit:validation>
+    </munit:test>
+	<munit:test name="weather-general-internal-server-error" doc:id="c64f6b4b-06c2-4bdd-9b66-cb7c44de8130" description="GET /weather - general internal server error">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="615d52b2-ec46-49f1-acce-7142cfe736cc" processor="set-variable">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ceb35937-fd12-4a58-b3ea-873a01cc9bd4" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="MULE:UNKNOWN" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="ba705a02-82bd-48c8-b3d1-375360696de9" >
+				<munit:attributes value="#[{ queryParams:
+ { 'CountryName' :  'Australia', 'CityName': 'Melbourne'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to getWeatherFlow" doc:id="f1791441-44c3-456d-88a8-d6c0d2eb994e" name="getWeatherFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="a775845a-becd-4016-aab2-c4beb4defb98" expression="#[output application/java
+---
+write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(
+MunitTools::getResourceAsStream('sample_data/weatherWebService_General_Internal_Server_Error_Response.json')
+replace '\r' with ''
+)]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="415b3610-b770-43ba-ba8c-bdb961cdc358" is="#[MunitTools::equalTo('500')]" expression="#[vars.httpStatus]"/>
+		</munit:validation>
+	</munit:test>
+</mule>

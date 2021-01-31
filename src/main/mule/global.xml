@@ -23,7 +23,7 @@ http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/
 		<wsc:connection wsdlLocation="${weatherWebService.wsdl}" service="${weatherWebService.service}" port="${weatherWebService.port}" />
 	</wsc:config>
 	<error-handler name="globalError_Handler" doc:id="65f1f173-51f4-4cf8-a164-9663b2f7e4f6" >
-		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="2a4ae957-bcda-459f-b6bc-f7228abbd482" type="APP:INVALID_COUNTRYNAME">
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="2a4ae957-bcda-459f-b6bc-f7228abbd482" type="APP:INVALID_COUNTRYNAME, APP:INVALID_CITYNAME">
 			<ee:transform doc:name="Invalid request parameter error" doc:id="cc2c2f5c-692c-4c05-96ce-eea64d292ab7" >
 				<ee:message >
 					<ee:set-payload ><![CDATA[%dw 2.0

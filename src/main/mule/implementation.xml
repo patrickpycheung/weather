@@ -59,4 +59,73 @@ output application/json
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="4140ef3b-7212-4376-b9bd-eaad917d0b3d" />
 	</flow>
+	<flow name="getWeatherFlow" doc:id="85cff91a-6f42-4425-be4b-cd88e4a04558" >
+		<set-variable value="#[message.attributes.queryParams.CityName default ' ']" doc:name="Set CityName" doc:id="ceb35937-fd12-4a58-b3ea-873a01cc9bd4" variableName="CityName" />
+		<validation:is-true doc:name="Is valid CityName?" doc:id="3323a6c6-a023-4878-8c4d-80e3b1386f34" expression="#[vars.CityName matches  /^[a-zA-Z $]{1,100}/]" message="#['Invalid CityName' 
+++ ' ' 
+++ (vars.CityName default ' ')]" >
+			<error-mapping sourceType="VALIDATION:INVALID_BOOLEAN" targetType="APP:INVALID_CITYNAME" />
+		</validation:is-true>
+		<set-variable value="#[message.attributes.queryParams.CountryName default ' ']" doc:name="Set CountryName" doc:id="d35b486b-8a60-48de-8b5c-4c5294f376c3" variableName="CountryName"/>
+		<validation:is-true doc:name="Is valid CountryName?" doc:id="73311924-ca90-4361-b842-b0840638db62" expression="#[vars.CountryName matches  /^[a-zA-Z $]{1,100}/]" message="#['Invalid CountryName' 
+++ ' ' 
+++ (vars.CountryName default ' ')]">
+			<error-mapping sourceType="VALIDATION:INVALID_BOOLEAN" targetType="APP:INVALID_COUNTRYNAME" />
+		</validation:is-true>
+		<ee:transform doc:name="Generate SOAP request for GetWeather web service" doc:id="9c79600c-5dbe-42fc-8dba-797ea84af398" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://www.webserviceX.NET
+---
+{
+	ns0#GetWeather: {
+		ns0#CityName: vars.CityName,
+		ns0#CountryName: vars.CountryName
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume doc:name="Consume GetWeather web service" doc:id="31422fbd-16cd-413c-a39f-ef4293de0aeb" config-ref="Weather_Web_Service_Consumer_Config" operation="GetWeather"/>
+		<logger level="INFO" doc:name="Logger" doc:id="2c297ac3-de92-48a4-8d9b-f9328a94edc0" />
+		<ee:transform doc:name="Extract CDATA content" doc:id="93427c31-e960-473d-8cda-45ecc7295e5e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+read(
+payload.body.GetWeatherResponse as String
+replace "&lt;" with "<"  
+replace "&gt;" with ">"
+replace "<![CDATA[" with ""
+replace "]" with ""
+replace "]>" with ""
+replace "\n" with ""
+replace ">>" with ">","application/xml")]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="48a65a0c-d5e3-4b40-a4a1-fe9e5c3ef673" />
+		<ee:transform doc:name="Organize response" doc:id="d0723185-8035-4a4b-b9a2-23732904bd36" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Country": vars.CountryName,
+	"City": payload.NewDataSet.Location,
+	"Time": payload.NewDataSet.Time,
+	"WeatherInfo": {
+		"Wind": payload.NewDataSet.Wind,
+		"Visibility": payload.NewDataSet.Visibility,
+		"SkyConditions": payload.NewDataSet.SkyConditions,
+		"Temperature": payload.NewDataSet.Temperature,
+		"DewPoint": payload.NewDataSet.DewPoint,
+		"RelativeHumidity": payload.NewDataSet.RelativeHumidity,
+		"Status": payload.NewDataSet.Status
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="0a85d4aa-ef2e-4491-97ca-5db712cebbfa" />
+	</flow>
 </mule>

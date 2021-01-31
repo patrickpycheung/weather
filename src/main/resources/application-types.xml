@@ -36,6 +36,56 @@ type getCitiesByCountryOrganizedResponse = {|
 
 ]]></types:shape>
     </types:type>
+    <types:type name="getWeatherRawResponse" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: object
+properties:
+    body:
+        type: string
+    headers:
+        type: array
+    attachments:
+        type: array]]></types:shape>
+    </types:type>
+    <types:type name="getWeatherCdataExtractedResponse" format="json">
+      <types:shape format="weave" example="examples/getWeatherCdataExtractedResponse.json"><![CDATA[%dw 2.0
+
+type getWeatherCdataExtractedResponse = {|
+  NewDataSet: {|
+    Location: String, 
+    Time: String, 
+    Wind: String, 
+    Visibility: String, 
+    SkyConditions: String, 
+    Temperature: String, 
+    DewPoint: String, 
+    RelativeHumidity: String, 
+    Status: String
+  |}
+|} {"example": "{\\\"NewDataSet\\\":{\\\"Location\\\":\\\"Melbourne\\\",\\\"Time\\\":\\\"11 AM\\\",\\\"Wind\\\":\\\"15 km per hour\\\",\\\"Visibility\\\":\\\"10 km\\\",\\\"SkyConditions\\\":\\\"sunny\\\",\\\"Temperature\\\":\\\"18\\\",\\\"DewPoint\\\":\\\"2 C\\\",\\\"RelativeHumidity\\\":\\\"35\\\",\\\"Status\\\":\\\"Normal\\\"}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="getWeatherOrganizedResponse" format="json">
+      <types:shape format="weave" example="examples/getWeatherOrganizedResponse.json"><![CDATA[%dw 2.0
+
+type getWeatherOrganizedResponse = {|
+  Country: String, 
+  City: String, 
+  Time: String, 
+  WeatherInfo: {|
+    Wind: String, 
+    Visibility: String, 
+    SkyConditions: String, 
+    Temperature: String, 
+    DewPoint: String, 
+    RelativeHumidity: String, 
+    Status: String
+  |}
+|} {"example": "{\\\"Country\\\":\\\"Australia\\\",\\\"City\\\":\\\"Melbourne\\\",\\\"Time\\\":\\\"11 AM\\\",\\\"WeatherInfo\\\":{\\\"Wind\\\":\\\"15 km per hour\\\",\\\"Visibility\\\":\\\"10 km\\\",\\\"SkyConditions\\\":\\\"sunny\\\",\\\"Temperature\\\":\\\"18\\\",\\\"DewPoint\\\":\\\"2 C\\\",\\\"RelativeHumidity\\\":\\\"35\\\",\\\"Status\\\":\\\"Normal\\\"}}"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#6bf77a9b-d1d2-4783-a3a2-1937744f1db3">
     <types:processor-declaration>
@@ -56,6 +106,29 @@ type getCitiesByCountryOrganizedResponse = {|
       <types:output-event>
         <types:message>
           <types:payload type="getCitiesByCountryOrganizedResponse"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#93427c31-e960-473d-8cda-45ecc7295e5e">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="getWeatherRawResponse"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="getWeatherCdataExtractedResponse"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#d0723185-8035-4a4b-b9a2-23732904bd36">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="getWeatherOrganizedResponse"/>
         </types:message>
       </types:output-event>
     </types:processor-declaration>

@@ -123,26 +123,6 @@ output application/json
 		<flow-ref doc:name="getCitiesFlow" doc:id="75d848c9-920b-4782-adb7-8261268c86c3" name="getCitiesFlow"/>
     </flow>
     <flow name="get:\weather:weather-api-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  Country: "Australia",
-  City: "Melbourne",
-  Time: "11 AM",
-  WeatherInfo: {
-    Wind: "15 km per hour",
-    Visibility: "10 km",
-    SkyConditions: "sunny",
-    Temperature: "18",
-    DewPoint: "2 C",
-    RelativeHumidity: "35",
-    Status: "Normal"
-  }
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="getWeatherFlow" doc:id="2115a719-6cb5-4946-b53c-dd222f87818d" name="getWeatherFlow"/>
     </flow>
 </mule>

@@ -1,0 +1,14 @@
+{
+  "Country": "A",
+  "City": "Melbourne",
+  "Time": "11 AM",
+  "WeatherInfo": {
+    "Wind": "15 km per hour",
+    "Visibility": "10 km",
+    "SkyConditions": "sunny",
+    "Temperature": "18",
+    "DewPoint": "2 C",
+    "RelativeHumidity": "35",
+    "Status": "Normal"
+  }
+}
