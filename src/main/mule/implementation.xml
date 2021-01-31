@@ -28,7 +28,7 @@ ns ns0 http://www.webserviceX.NET
 			</ee:message>
 		</ee:transform>
 		<wsc:consume doc:name="Consume GetCitiesByCountry web service" doc:id="557308ad-2fc2-4493-b238-8e53b227a158" config-ref="Weather_Web_Service_Consumer_Config" operation="GetCitiesByCountry"/>
-		<logger level="INFO" doc:name="Logger" doc:id="e1129fde-278e-41ec-8b2b-196fdc596b33" />
+		<logger level="DEBUG" doc:name="Logger" doc:id="e1129fde-278e-41ec-8b2b-196fdc596b33" />
 		<ee:transform doc:name="Extract CDATA content" doc:id="6bf77a9b-d1d2-4783-a3a2-1937744f1db3" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -44,7 +44,7 @@ replace "]>" with ""
 replace "\n" with "","application/xml")]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="fe7130af-0825-4e4e-9e00-29e997c7766b" />
+		<logger level="DEBUG" doc:name="Logger" doc:id="fe7130af-0825-4e4e-9e00-29e997c7766b" />
 		<ee:transform doc:name="Organize response" doc:id="b409dfba-cac2-48cc-8e3b-e417d186d263" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -57,7 +57,7 @@ output application/json
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="4140ef3b-7212-4376-b9bd-eaad917d0b3d" />
+		<logger level="DEBUG" doc:name="Logger" doc:id="4140ef3b-7212-4376-b9bd-eaad917d0b3d" />
 	</flow>
 	<flow name="getWeatherFlow" doc:id="85cff91a-6f42-4425-be4b-cd88e4a04558" >
 		<set-variable value="#[message.attributes.queryParams.CityName default ' ']" doc:name="Set CityName" doc:id="ceb35937-fd12-4a58-b3ea-873a01cc9bd4" variableName="CityName" />
@@ -87,7 +87,7 @@ ns ns0 http://www.webserviceX.NET
 			</ee:message>
 		</ee:transform>
 		<wsc:consume doc:name="Consume GetWeather web service" doc:id="31422fbd-16cd-413c-a39f-ef4293de0aeb" config-ref="Weather_Web_Service_Consumer_Config" operation="GetWeather"/>
-		<logger level="INFO" doc:name="Logger" doc:id="2c297ac3-de92-48a4-8d9b-f9328a94edc0" />
+		<logger level="DEBUG" doc:name="Logger" doc:id="2c297ac3-de92-48a4-8d9b-f9328a94edc0" />
 		<ee:transform doc:name="Extract CDATA content" doc:id="93427c31-e960-473d-8cda-45ecc7295e5e" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -126,6 +126,6 @@ output application/json
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="0a85d4aa-ef2e-4491-97ca-5db712cebbfa" />
+		<logger level="DEBUG" doc:name="Logger" doc:id="0a85d4aa-ef2e-4491-97ca-5db712cebbfa" />
 	</flow>
 </mule>

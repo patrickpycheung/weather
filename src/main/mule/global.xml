@@ -35,6 +35,7 @@ output application/json
 				</ee:message>
 			</ee:transform>
 			<set-variable value="400" doc:name="Set Variable" doc:id="4bd38353-c0e7-43e4-898e-fd10236f8d54" variableName="httpStatus"/>
+			<logger level="ERROR" doc:name="Logger" doc:id="a3f282e7-0903-46e2-8482-5f9f9a4fe761" />
 		</on-error-continue>
 		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bcb93e2f-3516-4495-8a8d-0cb98c41c312" type="WSC:CONNECTIVITY, WSC:INVALID_WSDL">
 			<ee:transform doc:name="Error on calling weather web service" doc:id="5eb174bc-d1dd-43a1-90f8-0865f2241f99" >
@@ -48,6 +49,7 @@ output application/json
 				</ee:message>
 			</ee:transform>
 			<set-variable value="500" doc:name="httpStatus" doc:id="eec5ec08-e1a1-43d3-9cda-27d9d9a81885" variableName="httpStatus"/>
+			<logger level="ERROR" doc:name="Logger" doc:id="ab26018a-c947-4ea4-b9b6-dbf65ee3095c" />
 		</on-error-continue>
 		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="00c7b3c7-71ce-4244-8537-8e4cc5ed2422" type="ANY">
 			<ee:transform doc:name="General internal server error" doc:id="92ff30d9-265a-456d-beb4-24f0dbe5c736">
@@ -61,6 +63,7 @@ output application/json
 				</ee:message>
 			</ee:transform>
 			<set-variable value="500" doc:name="httpStatus" doc:id="57c0fe24-1a4b-453e-8e58-67fe844656fd" variableName="httpStatus" />
+			<logger level="ERROR" doc:name="Logger" doc:id="5ba9b507-e368-4843-98cb-e1b091ef9707" />
 		</on-error-continue>
 	</error-handler>
 </mule>
