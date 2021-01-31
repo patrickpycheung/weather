@@ -1,0 +1,7 @@
+http:
+  port: "8081"
+
+weatherWebService:
+  wsdl: "http://localhost:8080/GlobalWeather?wsdl"
+  service: "GlobalWeather"
+  port: "GlobalWeatherSoap"
