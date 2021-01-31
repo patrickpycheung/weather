@@ -12,7 +12,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
     <apikit:config name="weather-api-config" api="weather-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
 	<configuration doc:name="Configuration" doc:id="d5ec1c5f-7375-4c51-8fbb-2577cff7b8ff" defaultErrorHandler-ref="globalError_Handler" />
-	<configuration-properties doc:name="Configuration properties" doc:id="f4df67ae-e4fa-4613-9fbb-6c06121b3575" file="config-prod.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="f4df67ae-e4fa-4613-9fbb-6c06121b3575" file="config.yaml" />
 	<http:listener-config name="Weather_API_HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="24bb2363-ee1a-4d7b-bd75-d8008cc53dcd" >
 		<http:listener-connection host="0.0.0.0" port="${http.port}" />
 	</http:listener-config>
