@@ -1,0 +1,53 @@
+#%RAML 1.0
+title: Weather API
+
+types:
+  Cities: !include /types/CitiesDataType.raml
+  Weather: !include /types/WeatherDataType.raml
+  ErrorMessage: !include /types/ErrorMessageDataType.raml
+
+/cities:
+  get:
+    queryParameters:
+      CountryName:
+        required: true
+    responses:
+      200:
+        body:
+          application/json:
+            type: Cities
+            example: !include /examples/CitiesExample.raml
+      400:
+        body:
+          application/json:
+            type: ErrorMessage
+            example: !include /examples/BadRequestErrorMessageExample.raml
+      500:
+        body:
+          application/json:
+            type: ErrorMessage
+            example: !include /examples/InternalServerErrorMessageExample.raml
+
+/weather:
+  get:
+    queryParameters:
+      CountryName:
+        required: true
+      CityName:
+        required: true
+    responses:
+      200:
+        body:
+          application/json:
+            type: Weather
+            example: !include /examples/WeatherExample.raml
+      400:
+        body:
+          application/json:
+            type: ErrorMessage
+            example: !include /examples/BadRequestErrorMessageExample.raml
+      500:
+        body:
+          application/json:
+            type: ErrorMessage
+            example: !include /examples/InternalServerErrorMessageExample.raml
