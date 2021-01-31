@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd http://www.mulesoft.org/schema/mule/munit-tools http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd ">
     <munit:config name="cities-normal-case.xml" />
-    <munit:test name="get:\cities:weather-api-config-countryName-boundary-min-200-application\json-FlowTest" description="Verifying functionality of [get:\cities:weather-api-config-200-application\json]">
+    <munit:test name="cities-countryName-boundary-min" description="GET /cities - countryName of minimum allowed length">
         <munit:enable-flow-sources>
             <munit:enable-flow-source value="weather-api-main" />
             <munit:enable-flow-source value="get:\cities:weather-api-config" />
@@ -17,7 +17,7 @@
             <munit-tools:assert-that expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(MunitTools::getResourceAsString('sample_data/getCitiesByCountryOrganizedResponse.json'))]" message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
         </munit:validation>
     </munit:test>
-    <munit:test name="get:\cities:weather-api-config-countryName-boundary-max-200-application\json-FlowTest" description="Verifying functionality of [get:\cities:weather-api-config-200-application\json]">
+    <munit:test name="cities-countryName-boundary-max" description="GET /cities - countryName of maximum allowed length">
         <munit:enable-flow-sources>
             <munit:enable-flow-source value="weather-api-main" />
             <munit:enable-flow-source value="get:\cities:weather-api-config" />
@@ -33,7 +33,7 @@
             <munit-tools:assert-that expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(MunitTools::getResourceAsString('sample_data/getCitiesByCountryOrganizedResponse.json'))]" message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
         </munit:validation>
     </munit:test>
-    <munit:test name="get:\cities:weather-api-config-countryName-space-200-application\json-FlowTest" description="Verifying functionality of [get:\cities:weather-api-config-200-application\json]">
+    <munit:test name="cities-countryName-space" description="GET /cities - countryName is space">
         <munit:enable-flow-sources>
             <munit:enable-flow-source value="weather-api-main" />
             <munit:enable-flow-source value="get:\cities:weather-api-config" />
