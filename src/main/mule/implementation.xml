@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="getCitiesFlow" doc:id="779b7a1c-f43e-49f2-9b3d-0e1966bbed17" >
+		<set-variable value="#[message.attributes.queryParams.CountryName default ' ']" doc:name="Set CountryName" doc:id="d22d11cf-7e89-46e6-b7f4-b1495ff76471" variableName="CountryName"/>
+		<validation:is-true doc:name="Is valid CountryName?" doc:id="568b220d-c592-4461-a55a-6bc0c98d70aa" expression="#[vars.CountryName matches  /^[a-zA-Z $]{1,100}/]" message="#['Invalid CountryName' 
+++ ' ' 
+++ (vars.CountryName default ' ')]">
+			<error-mapping targetType="APP:INVALID_COUNTRYNAME" sourceType="VALIDATION:INVALID_BOOLEAN"/>
+		</validation:is-true>
+		<ee:transform doc:name="Generate SOAP request for GetCitiesByCountry web service" doc:id="540f6ee5-583e-4a5d-ac50-110d514061e0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://www.webserviceX.NET
+---
+{
+	ns0#GetCitiesByCountry: {
+		ns0#CountryName: vars.CountryName
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume doc:name="Consume GetCitiesByCountry web service" doc:id="557308ad-2fc2-4493-b238-8e53b227a158" config-ref="Weather_Web_Service_Consumer_Config" operation="GetCitiesByCountry"/>
+		<logger level="INFO" doc:name="Logger" doc:id="e1129fde-278e-41ec-8b2b-196fdc596b33" />
+		<ee:transform doc:name="Extract CDATA content" doc:id="6bf77a9b-d1d2-4783-a3a2-1937744f1db3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+read(
+payload.body.GetCitiesByCountryResponse as String
+replace "&lt;" with "<"  
+replace "&gt;" with ">"
+replace "<![CDATA[" with ""
+replace "]" with ""
+replace "]>" with ""
+replace "\n" with "","application/xml")]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="fe7130af-0825-4e4e-9e00-29e997c7766b" />
+		<ee:transform doc:name="Organize response" doc:id="b409dfba-cac2-48cc-8e3b-e417d186d263" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Country": payload.NewDataSet[0].Country,
+	"Cities": payload.NewDataSet.*Table.*City
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="4140ef3b-7212-4376-b9bd-eaad917d0b3d" />
+	</flow>
+</mule>

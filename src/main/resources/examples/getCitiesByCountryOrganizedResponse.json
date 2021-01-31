@@ -1,0 +1,8 @@
+{
+  "Country": "Australia",
+  "Cities": [
+    { "City": "Archerfield Aerodrome" },
+    { "City": "Amberley Aerodrome" },
+    { "City": "Alice Springs Aerodrome" }
+  ]
+}

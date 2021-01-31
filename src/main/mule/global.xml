@@ -1,13 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+    <apikit:config name="weather-api-config" api="weather-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
 	<configuration doc:name="Configuration" doc:id="d5ec1c5f-7375-4c51-8fbb-2577cff7b8ff" defaultErrorHandler-ref="globalError_Handler" />
 	<configuration-properties doc:name="Configuration properties" doc:id="f4df67ae-e4fa-4613-9fbb-6c06121b3575" file="config-prod.yaml" />
+	<http:listener-config name="Weather_API_HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="24bb2363-ee1a-4d7b-bd75-d8008cc53dcd" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+    <http:request-config name="Weather_API_HTTP_Request_Configuration" basePath="/api">
+        <http:request-connection host="${http.host}" port="${http.port}" />
+    </http:request-config>
+	<wsc:config name="Weather_Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="e580aa50-4697-49dc-9a0e-5fbe93d051cb" >
+		<wsc:connection wsdlLocation="${weatherWebService.wsdl}" service="${weatherWebService.service}" port="${weatherWebService.port}" />
+	</wsc:config>
 	<error-handler name="globalError_Handler" doc:id="65f1f173-51f4-4cf8-a164-9663b2f7e4f6" >
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="2a4ae957-bcda-459f-b6bc-f7228abbd482" type="APP:INVALID_COUNTRYNAME">
+			<ee:transform doc:name="Invalid request parameter error" doc:id="cc2c2f5c-692c-4c05-96ce-eea64d292ab7" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="400" doc:name="Set Variable" doc:id="4bd38353-c0e7-43e4-898e-fd10236f8d54" variableName="httpStatus"/>
+		</on-error-continue>
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bcb93e2f-3516-4495-8a8d-0cb98c41c312" type="WSC:CONNECTIVITY, WSC:INVALID_WSDL">
+			<ee:transform doc:name="Error on calling weather web service" doc:id="5eb174bc-d1dd-43a1-90f8-0865f2241f99" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Data unavailable. Try later. " ++ error.description as String
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="500" doc:name="httpStatus" doc:id="eec5ec08-e1a1-43d3-9cda-27d9d9a81885" variableName="httpStatus"/>
+		</on-error-continue>
 		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="00c7b3c7-71ce-4244-8537-8e4cc5ed2422" type="ANY">
 			<ee:transform doc:name="General internal server error" doc:id="92ff30d9-265a-456d-beb4-24f0dbe5c736">
 				<ee:message>

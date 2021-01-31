@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="getCitiesByCountryRawResponse" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: object
+properties:
+    body:
+        type: string
+    headers:
+        type: array
+    attachments:
+        type: array]]></types:shape>
+    </types:type>
+    <types:type name="getCitiesByCountryCdataExtractedResponse" format="json">
+      <types:shape format="weave" example="examples/getCitiesByCountryCdataExtractedResponse.json"><![CDATA[%dw 2.0
+
+type getCitiesByCountryCdataExtractedResponse = {|
+  NewDataSet: {|
+    Table: {|
+      Country: String, 
+      City: String
+    |}
+  |}
+|} {"example": "{\\\"NewDataSet\\\":{\\\"Table\\\":{\\\"Country\\\":\\\"Australia\\\",\\\"City\\\":\\\"Williamtown Aerodrome\\\"}}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="getCitiesByCountryOrganizedResponse" format="json">
+      <types:shape format="weave" example="examples/getCitiesByCountryOrganizedResponse.json"><![CDATA[%dw 2.0
+
+type getCitiesByCountryOrganizedResponse = {|
+  Country: String, 
+  Cities: Array<{| City: String |}>
+|} {"example": "{\\\"Country\\\":\\\"Australia\\\",\\\"Cities\\\":[{\\\"City\\\":\\\"Archerfield Aerodrome\\\"},{\\\"City\\\":\\\"Amberley Aerodrome\\\"},{\\\"City\\\":\\\"Alice Springs Aerodrome\\\"}]}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#6bf77a9b-d1d2-4783-a3a2-1937744f1db3">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="getCitiesByCountryRawResponse"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="getCitiesByCountryCdataExtractedResponse"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#b409dfba-cac2-48cc-8e3b-e417d186d263">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="getCitiesByCountryOrganizedResponse"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

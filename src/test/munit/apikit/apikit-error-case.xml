@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd http://www.mulesoft.org/schema/mule/munit-tools http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd ">
+    <munit:config name="apikit-error-case.xml" />
+    <munit:test name="get:\cities:weather-api-config-bad-request-400-application\json-FlowTest" description="Verifying functionality of [get:\cities:weather-api-config-400-application\json]" expectedErrorType="HTTP:BAD_REQUEST">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="weather-api-main" />
+            <munit:enable-flow-source value="get:\cities:weather-api-config" />
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <http:request config-ref="Weather_API_HTTP_Request_Configuration" method="GET" path="/cities">
+                <http:headers><![CDATA[#[{"Accept":"application/json"}]]]></http:headers>
+                <http:query-params><![CDATA[#[{"abc":"123"}]]]></http:query-params>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(400)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 400" />
+            <munit-tools:assert-that expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(MunitTools::getResourceAsString('scaffolder/response/get_400_cities_application_json.json'))]" message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
+        </munit:validation>
+    </munit:test>
+    <munit:test name="get:\cities:weather-api-config-not-found-404-application\json-FlowTest" description="Verifying functionality of [get:\cities:weather-api-config-404-application\json]" expectedErrorType="HTTP:NOT_FOUND">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="weather-api-main" />
+            <munit:enable-flow-source value="get:\cities:weather-api-config" />
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <http:request config-ref="Weather_API_HTTP_Request_Configuration" method="GET" path="/abc">
+                <http:headers><![CDATA[#[{"Accept":"application/json"}]]]></http:headers>
+                <http:query-params><![CDATA[#[{"CountryName":"Australia"}]]]></http:query-params>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(404)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 404" />
+            <munit-tools:assert-that expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(MunitTools::getResourceAsString('scaffolder/response/get_404_cities_application_json.json'))]" message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
+        </munit:validation>
+    </munit:test>
+    <munit:test name="get:\cities:weather-api-config-method-not-allowed-405-application\json-FlowTest" description="Verifying functionality of [get:\cities:weather-api-config-405-application\json]" expectedErrorType="HTTP:METHOD_NOT_ALLOWED">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="weather-api-main" />
+            <munit:enable-flow-source value="get:\cities:weather-api-config" />
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <http:request config-ref="Weather_API_HTTP_Request_Configuration" method="POST" path="/cities">
+                <http:headers><![CDATA[#[{"Accept":"application/json"}]]]></http:headers>
+                <http:query-params><![CDATA[#[{"CountryName":"Australia"}]]]></http:query-params>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(405)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 405" />
+            <munit-tools:assert-that expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(MunitTools::getResourceAsString('scaffolder/response/get_405_cities_application_json.json'))]" message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
+        </munit:validation>
+    </munit:test>
+    <munit:test name="get:\cities:weather-api-config-method-not-acceptable-406-application\json-FlowTest" description="Verifying functionality of [get:\cities:weather-api-config-406-application\json]" expectedErrorType="HTTP:NOT_ACCEPTABLE">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="weather-api-main" />
+            <munit:enable-flow-source value="get:\cities:weather-api-config" />
+        </munit:enable-flow-sources>
+        <munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="41e5c0b4-fe20-4366-a025-35764b3be924" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="weather-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+            <http:request config-ref="Weather_API_HTTP_Request_Configuration" method="POST" path="/cities">
+                <http:headers><![CDATA[#[{"Accept":"application/json"}]]]></http:headers>
+                <http:query-params><![CDATA[#[{"CountryName":"Australia"}]]]></http:query-params>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(406)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 406" />
+            <munit-tools:assert-that expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(MunitTools::getResourceAsString('scaffolder/response/get_406_cities_application_json.json'))]" message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
+        </munit:validation>
+    </munit:test>
+    <munit:test name="get:\cities:weather-api-config-unsupported-media-type-415-application\json-FlowTest" description="Verifying functionality of [get:\cities:weather-api-config-415-application\json]" expectedErrorType="HTTP:UNSUPPORTED_MEDIA_TYPE">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="weather-api-main" />
+            <munit:enable-flow-source value="get:\cities:weather-api-config" />
+        </munit:enable-flow-sources>
+        <munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="89a8e25e-c064-4255-b458-3ae53ab20af3" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="weather-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+            <http:request config-ref="Weather_API_HTTP_Request_Configuration" method="POST" path="/cities">
+                <http:headers><![CDATA[#[{"Accept":"application/json"}]]]></http:headers>
+                <http:query-params><![CDATA[#[{"CountryName":"Australia"}]]]></http:query-params>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(415)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 415" />
+            <munit-tools:assert-that expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(MunitTools::getResourceAsString('scaffolder/response/get_415_cities_application_json.json'))]" message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
+        </munit:validation>
+    </munit:test>
+    <munit:test name="get:\cities:weather-api-config-not-implemented-501-application\json-FlowTest" description="Verifying functionality of [get:\cities:weather-api-config-501-application\json]" expectedErrorType="MULE:UNKNOWN">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="weather-api-main" />
+            <munit:enable-flow-source value="get:\cities:weather-api-config" />
+        </munit:enable-flow-sources>
+        <munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="28a0b981-c9e2-4798-b00f-87a16644d7e8" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="weather-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+            <http:request config-ref="Weather_API_HTTP_Request_Configuration" method="POST" path="/cities">
+                <http:headers><![CDATA[#[{"Accept":"application/json"}]]]></http:headers>
+                <http:query-params><![CDATA[#[{"CountryName":"Australia"}]]]></http:query-params>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(501)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 501" />
+            <munit-tools:assert-that expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(MunitTools::getResourceAsString('scaffolder/response/get_501_cities_application_json.json'))]" message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
+        </munit:validation>
+    </munit:test>
+</mule>
