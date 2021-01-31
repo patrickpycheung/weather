@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<configuration doc:name="Configuration" doc:id="d5ec1c5f-7375-4c51-8fbb-2577cff7b8ff" defaultErrorHandler-ref="globalError_Handler" />
 	<configuration-properties doc:name="Configuration properties" doc:id="f4df67ae-e4fa-4613-9fbb-6c06121b3575" file="config-prod.yaml" />
+	<error-handler name="globalError_Handler" doc:id="65f1f173-51f4-4cf8-a164-9663b2f7e4f6" >
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="00c7b3c7-71ce-4244-8537-8e4cc5ed2422" type="ANY">
+			<ee:transform doc:name="General internal server error" doc:id="92ff30d9-265a-456d-beb4-24f0dbe5c736">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="500" doc:name="httpStatus" doc:id="57c0fe24-1a4b-453e-8e58-67fe844656fd" variableName="httpStatus" />
+		</on-error-continue>
+	</error-handler>
 </mule>
