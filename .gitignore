@@ -38,4 +38,4 @@ blog/bin/
 hs_err_pid*
 
 #Anypoint studio files
-*.lock
+**/.mule
