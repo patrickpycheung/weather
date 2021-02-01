@@ -72,7 +72,7 @@ The API gets the request parameters from the user, and calls the GlobalWeather w
 
         <img src="https://bn1301files.storage.live.com/y4mBw04NiWIC9j1etMcnjEJVhtf1_8R0pBgR1iAO1uCEbdIwCaUmcSQBNMKiWQcc36DjqeZw2vZXD0AXH8wuzMuIAjirOhCo61kTHMK7uBZImBeSEeetvYLrvXBe2n5Y6aW642FpBM5xmK8ejkvfx66MSqooXwYYTeXIQLyJrOQRLJSd-7K8roSpBURMO65hNG8?width=2012&height=718&cropmode=none" title="Anypoint_studio_launch_application_02" alt="Anypoint_studio_launch_application_02">
 
-        **Run the application with stand alone Mule runtime**
+        **Run the application with standalone Mule runtime**
 
       * Build the application JAR file
       
@@ -105,27 +105,38 @@ The API gets the request parameters from the user, and calls the GlobalWeather w
         <img src="https://bn1301files.storage.live.com/y4mgZ9aQCPEbP6hzzUz0U8gvETXIf2Anzfm4MX1cUFC3soYOyCqOJVB8woj9J5xPQ1UDURo_hv8I1sxqNwq4bUHmvL7z1mmrgfwX8VewWpWwrrfuWLzyLmqP5ZiKqewZESD4TQjUZYcjd8Qq6xlNATOpnMbZA5GACF5WIzRaQa5lMHX8mocs_Pi8jTOsp3YDXDX?width=1468&height=440&cropmode=none" title="JAR_file_location" alt="JAR_file_location">
         <br/>
 
-* Deploy the JAR file to the stand alone Mule runtime
+* Deploy the JAR file to the standalone Mule runtime
    * Get a copy of the Mule 4 standalone runtime.
-    <br/>
-   Refer to [**Mule 4 standalone runtime download site**](#mule-4-standalone-runtime-download-site)
+      <br/>
+      <br/>
+   You may get it at https://www.mulesoft.com/lp/dl/mule-esb-enterprise
+      <br/>
+      <br/>
    * Copy the JAR file to the {mule-standalone-runtime}/apps folder
       <br/>
       <br/>
       <img src="https://bn1301files.storage.live.com/y4m8aYCDncDCbIu2_sTchDEDeombWda6dnJb5D_Pzg3eoPqcFcEppwFFLfMOeW8E_7D3g83y4UhrzoGdDR9wguT8qrGE8Ho63v5FPVShj-9uCCLj963MexHEb-JW4IsYogGig3MyqTP8WihVGUF5-_yLJH6xqmrtJ7T8Figuvh1Ef7P3vdbuSY9GtW_so-SARla?width=1692&height=692&cropmode=none" title="Copy_JAR_to_mule_standalone_runtime" alt="Copy_JAR_to_mule_standalone_runtime">
+      <br/>
+      <br/>
    * Go to the binaries folder {mule-standalone-runtime}/bin
     <br/>
     <br/>
       <img src="https://bn1301files.storage.live.com/y4m1pUajqdwbuZv3B7MLqstkTe_QfaZItlVwczdRlc5nNFLWH0nGjzAzSE-Z1c5ZLHlgpwDyg7cffRNk9wqGC1pdmiizDlwcF-bD1-FVsy8XdpuS5_Z5sdJQX1_I9-1tMeC7gYCPsDwkTca0chpj-VALean6NpXEC_6gNa3WSLEJLTPCJ3l1dXu6ajGLTEQFwEd?width=1484&height=692&cropmode=none" title="Go_to_mule_runtime_binary_folder" alt="Go_to_mule_runtime_binary_folder">
-   * Start up the server by the following command
-      * Linux/Unix/MacOS
+      <br/>
+      <br/>
+   Start up the server by the following command
+    <br/>
+    <br/>
+      Linux/Unix/MacOS
 
             ./mule -Dlog.level=INFO
-      * Windows
+    <br/>
+    <br/>
+      Windows
 
             ./mule.bat -Dlog.level=INFO
-
-      <br/>
+    <br/>
+    <br/>
       <img src="https://bn1301files.storage.live.com/y4me6MsG83CaifBIHMH6wONEFIpTsJe1MZAciMxmZvUICLU-9pJtvOBrM3HRBQpJCG3jnEbV8lYwNTaUQu3j9dRxDJVoIOmmUyUWEzXFpV98LqVk6l9SXCiSi7YgCg7w6wi_I7zH1sEF3z31z3vybizRf42glHrg6fRgJpKrhcX6V8VHXqaWXa2aGPoLawOzNgd?width=5102&height=2864&cropmode=none" title="Mule_standalone_runtime_launch_application_01" alt="Mule_standalone_runtime_launch_application_01">
       <br/>
       <img src="https://bn1301files.storage.live.com/y4myPjUuTSSJNjB_pFpcGfj7K9NE_4E-KkaIsXbZB3y-nZfnG-6uM_AnfXSDvzEY1fHBnhfPMNgIKC_H3PwgiTSW1RI5ST4drWBo_AebZh4fQXJd9UOqBrFSo_bW3bROP7spKLOXUuaSWviaSCfG89DHWn6Vq1joTtWujsaES0qKjkJvR117PRG1q3suYDCcMDZ?width=5102&height=2864&cropmode=none" title="Mule_standalone_runtime_launch_application_02" alt="Mule_standalone_runtime_launch_application_02">
@@ -139,12 +150,12 @@ The API gets the request parameters from the user, and calls the GlobalWeather w
    5. Test the functioning of the application with some requests
     <br/>
     <br/>
-  * GET /cities
+  GET /cities
       <br/>
       <br/>
       <img src="https://bn1301files.storage.live.com/y4mu38NO90LmVB8QWap-SOEBxLwmoWQykL7Uw68Ax5DM78KXfUXk3iHFEwA4kK-jag-DB_4ckWl7OiIyHYs21jMLVTzYZRIW4YGUtOmEpWY9ifTIn8SUUuWHIuhe63t4wvOLaZL42wXbOr6U4UquXGnuwyvNuPlq-6-_j18lie2I5jDuorIWNNjtfIzbNCXvyAA?width=4524&height=2548&cropmode=none" title="Test_get_cities" alt="Test_get_cities">
       <br/>
-  * GET /weather
+  GET /weather
       <br/>
       <br/>
       <img src="https://bn1301files.storage.live.com/y4mdk-VFFGfc7AHC_XEaViCrPmbwPSxVL-XoajlervaMzatDImlovElGbyEfG8SQIokMvQeRtRFLGuMznKJNVsGuKOCWB0oojsIsY-NJmKhpKypLmzG3iHiS6Y0lye7F3fDpffmYC4BkYNLT2GZNHaht39rAiFw2YmZSNTab2FnHtgEtb8m96HmOx90yP45dWE1?width=4524&height=896&cropmode=none" title="Test_get_weather" alt="Test_get_weather">
