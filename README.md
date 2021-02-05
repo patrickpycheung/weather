@@ -129,12 +129,12 @@ The API gets the request parameters from the user, and calls the GlobalWeather w
     <br/>
       Linux/Unix/MacOS
 
-            ./mule -Dlog.level=INFO
+            ./mule -M-Dlog.level=INFO
     <br/>
     <br/>
       Windows
 
-            ./mule.bat -Dlog.level=INFO
+            ./mule.bat -M-Dlog.level=INFO
     <br/>
     <br/>
       <img src="https://bn1301files.storage.live.com/y4me6MsG83CaifBIHMH6wONEFIpTsJe1MZAciMxmZvUICLU-9pJtvOBrM3HRBQpJCG3jnEbV8lYwNTaUQu3j9dRxDJVoIOmmUyUWEzXFpV98LqVk6l9SXCiSi7YgCg7w6wi_I7zH1sEF3z31z3vybizRf42glHrg6fRgJpKrhcX6V8VHXqaWXa2aGPoLawOzNgd?width=5102&height=2864&cropmode=none" title="Mule_standalone_runtime_launch_application_01" alt="Mule_standalone_runtime_launch_application_01">
