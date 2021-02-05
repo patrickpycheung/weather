@@ -5,7 +5,7 @@
   * [**Version history**](#version-history)
   * [**About the application**](#about-the-application)
   * [**Operation manual**](#operation-manual)
-    * [**Pre-requsites**](#pre-requsites)
+    * [**Pre-requisites**](#pre-requisites)
     * [**Steps**](#steps)
     * [**Reference**](#reference)
 
@@ -23,9 +23,9 @@ The API gets the request parameters from the user, and calls the GlobalWeather w
 
 ## **Operation manual**
 
-  ### Pre-requsites
+  ### Pre-requisites
 
-  * AnyPoint Studio 7.7 (Use Maven 4.3.0 to run the application)
+  * AnyPoint Studio 7.7 (Use Mule 4.3.0 runtime to run the application)
   * Maven 4.3.0 standalone runtime (if you would like to run the application independently)
   * Maven
   * JDK8
